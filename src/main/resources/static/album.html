@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>사진 앨범</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        .grid { display: flex; flex-wrap: wrap; gap: 16px; }
+        .grid img { width: 200px; height: auto; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+<h2>📷 저장된 필터 이미지 앨범</h2>
+<div class="grid" id="album"></div>
+
+<br />
+<a href="/index.html">← 필터 적용 페이지로</a>
+
+<script>
+    fetch('/album-list')
+        .then(res => res.json())
+        .then(images => {
+            const album = document.getElementById('album');
+            images.forEach(imgPath => {
+                const img = document.createElement('img');
+                img.src = imgPath + '?t=' + new Date().getTime();
+                album.appendChild(img);
+            });
+        });
+</script>
+</body>
+</html>

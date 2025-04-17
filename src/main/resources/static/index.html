@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>사진 필터 적용</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; margin-top: 40px; }
+        img { max-width: 300px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+<h2>사진에 LUT 필터 적용하기</h2>
+<form id="uploadForm" enctype="multipart/form-data">
+    <input type="file" name="file" id="fileInput" accept="image/*" required />
+    <br /><br />
+    <select name="filter" id="filterSelect">
+        <option value="warm">따뜻한 필터</option>
+        <option value="cool">차가운 필터</option>
+        <option value="gray">흑백 필터</option>
+        <option value="bright">밝게</option>
+        <option value="dark">어둡게</option>
+    </select>
+    <br /><br />
+    <button type="submit">필터 적용</button>
+</form>
+
+<div id="previewArea">
+    <h3>미리보기</h3>
+    <img id="previewImage" style="display:none;" />
+</div>
+
+<br />
+<a href="/album.html">📸 저장된 앨범 보기</a>
+
+<script>
+    const form = document.getElementById('uploadForm');
+    const previewImage = document.getElementById('previewImage');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const response = await fetch('/apply-lut', {
+            method: 'POST',
+            body: formData
+        });
+
+        const imagePath = await response.text();
+
+        if (response.ok) {
+            previewImage.src = imagePath + '?t=' + new Date().getTime();
+            previewImage.style.display = 'block';
+        } else {
+            alert('처리 실패: ' + imagePath);
+        }
+    });
+</script>
+</body>
+</html>
